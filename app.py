@@ -31,17 +31,14 @@ def app():
         reader = easyocr.Reader(['en']) # need to run only once to load model into memory
         result = reader.readtext(img)
 
-        # Initialize dataframe
-        df = pd.DataFrame(columns=['Text'])
+        # Create a list of dictionaries
+        data = [{'Text': i[1]} for i in result]
 
-        # Fill the dataframe with the results
-        for i in result:
-            df = df.append({'Text': i[1]}, ignore_index=True)
+        # Create the DataFrame
+        df = pd.DataFrame(data)
 
         # Display the data as a table
-        df_styled = df.style.set_properties(**{'text-align': 'left'})
-        df_styled.set_table_styles([dict(selector='th', props=[('text-align', 'left')])])
-        st.dataframe(df_styled)
+        st.dataframe(df)
 
         # Let the user download the results as a CSV file
         csv = df.to_csv(index=False)
